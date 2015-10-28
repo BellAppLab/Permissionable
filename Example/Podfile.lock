@@ -1,9 +1,11 @@
 PODS:
   - Alertable (0.1.0)
   - Backgroundable (0.2.2)
-  - Permissionable (0.1.0):
+  - Defines (0.3.0)
+  - Permissionable (0.2.0):
     - Alertable
     - Backgroundable
+    - Defines
 
 DEPENDENCIES:
   - Permissionable (from `../`)
@@ -15,6 +17,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alertable: 6a305eac65d3272f5fcf693207bb8e3975b2745a
   Backgroundable: 58eb850598aa4aa0d6da564246c28da955730d4e
-  Permissionable: 75f91c1ecbd426bdb5b5222dc450cb54286f82b0
+  Defines: 43b157f1abcba4e5f1e9b522cf49be5e44d90be0
+  Permissionable: 3ab6f4479fe483c64b71c2dceb55519298f7e8b5
 
 COCOAPODS: 0.39.0

@@ -3,14 +3,37 @@ import AVFoundation
 import Photos
 import Alertable
 import Backgroundable
+import Defines
+
+
+//MARK: Consts
+public func domain() -> String
+{
+    return "com.bellapplab.Permissionable"
+}
+
+public func defaultsDomain() -> String
+{
+    return domain() + "." + Defines.App.Name
+}
 
 
 //MARK: - Main
 /*
     An simplified way of asking permissions to the user on iOS.
 */
-public enum Permission: Int
+public enum Permission
 {
+    /*
+        Resets any cached information on permissions requested to the user.
+    
+        @discussion Permissionable may cache information whether we have requested some permissions or not. Calling this method clears those caches.
+    */
+    public static func reset()
+    {
+        NSUserDefaults.setPushRegistration(nil)
+    }
+    
     /*
         When you ask for permissions, this is how you get a response back.
     */
@@ -21,22 +44,36 @@ public enum Permission: Int
         
         For now we're supporting Camera and Photos permissions. More to come!
     */
-    case Camera, Photos
+    case Camera, Photos, Push
     
     /**/
     public func request(sender: UIViewController, _ block: Result? = nil)
     {
+        self.request(sender, nil, block)
+    }
+    
+    public func request(sender: UIViewController, _ categories: Set<UIUserNotificationCategory>?, _ block: Result? = nil)
+    {
         if let access = self.hasAccess { //We either have access or we've been denied
             if access { //No need to ask the user
+                if self == .Push {
+                    //But in the case of push notifications, we still want to get a token fresh from the oven
+                    self.proceedWithPush(categories, block)
+                    return
+                }
+                toMainThread {
+                    block?(success: true)
+                }
                 return
             }
             //We've been denied access
-            let privatePermission = PrivatePermission(rawValue: self.rawValue)!
-            Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
+            if let privatePermission = PrivatePermission.privateFor(publicPermission: self) {
+                Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
+            }
             return
         }
         //We haven't asked for permissions yet
-        Alert.show(self.message, self.title, sender, self.actions(sender, block))
+        Alert.show(self.message, self.title, sender, self.actions(sender, categories, block))
     }
     
     /*
@@ -47,8 +84,7 @@ public enum Permission: Int
     var title: String {
         switch self
         {
-        case .Camera: return NSLocalizedString("Please", comment: "Title for the alert that appears when we want to ask the user for the camera")
-        case .Photos: return NSLocalizedString("Please", comment: "Title for the alert that appears when we want to ask the user for their photos")
+        case .Camera, .Photos, .Push: return NSLocalizedString("Please", comment: "Title for the alert that appears when we want to ask the user for permissions")
         }
     }
     
@@ -62,6 +98,7 @@ public enum Permission: Int
         {
         case .Camera: return NSLocalizedString("Would you mind if we access your camera?", comment: "Message that asks the user for the camera")
         case .Photos: return NSLocalizedString("Would you mind if we access your photos?", comment: "Message that asks the user for their photos")
+        case .Push: return NSLocalizedString("Would you mind if we send you push notifications?", comment: "Message that asks the user if we can send them push notifications")
         }
     }
     
@@ -85,11 +122,12 @@ public enum Permission: Int
             case .Denied, .Restricted: return false
             case .NotDetermined: return nil
             }
+        case .Push:
+            return NSUserDefaults.isRegisteredForPush()
         }
-        
     }
     
-    private func actions(sender: UIViewController, _ block: Result?) -> [Alert.Action]
+    private func actions(sender: UIViewController, _ categories: Set<UIUserNotificationCategory>? = nil, _ block: Result?) -> [Alert.Action]
     {
         var result: [Alert.Action] = []
         result.append((title: NSLocalizedString("No", comment: ""), style: .Destructive, handler: block == nil ? nil : { (UIAlertAction) -> Void in
@@ -117,23 +155,73 @@ public enum Permission: Int
                     Alert.on = false
                     toMainThread {
                         if status == .Denied || status == .Restricted {
-                            let privatePermission = PrivatePermission(rawValue: self.rawValue)!
-                            Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
+                            if let privatePermission = PrivatePermission.privateFor(publicPermission: self) {
+                                Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
+                            }
                         }
                         block?(success: status == .Authorized)
                     }
                 }
             }))
             break
+        case .Push:
+            result.append((title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
+                Alert.on = true
+                self.proceedWithPush(categories, block)
+            }))
         }
         return result
+    }
+    
+    //MARK: Push
+    private func proceedWithPush(categories: Set<UIUserNotificationCategory>? = nil, _ block: Result?)
+    {
+        if self != .Push {
+            return
+        }
+        pushBlock = block
+        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: categories)
+        let application = UIApplication.sharedApplication()
+        application.registerUserNotificationSettings(settings)
+        application.registerForRemoteNotifications()
+    }
+    
+    public static func didFinishRegisteringForPushNotifications(error: NSError?)
+    {
+        func finish(result: Bool) {
+            NSUserDefaults.setPushRegistration(result)
+            returnFromPush(result)
+        }
+        
+        if let finalError = error {
+#if DEGUB
+            if finalError.code == 3010 {
+                print("Push notifications are not supported in the iOS Simulator.")
+            }
+            print("Permissionable says: Something went wrong with Push Notifications... -> \(finalError)")
+#endif
+            finish(false)
+            return
+        }
+        
+        finish(true)
     }
 }
 
 
 //MARK: - Private
-private enum PrivatePermission: Int
+private enum PrivatePermission
 {
+    static func privateFor(publicPermission permission: Permission) -> PrivatePermission?
+    {
+        switch permission
+        {
+        case .Camera: return .NoCamera
+        case .Photos: return .NoPhotos
+        default: return nil
+        }
+    }
+    
     case NoCamera, NoPhotos
     
     /*
@@ -180,5 +268,37 @@ private enum PrivatePermission: Int
             }
         }))
         return result
+    }
+}
+
+private var pushBlock: Permission.Result? = nil
+
+private func returnFromPush(result: Bool)
+{
+    if let block = pushBlock {
+        toMainThread {
+            block(success: result)
+        }
+    }
+    pushBlock = nil
+}
+
+private extension NSUserDefaults
+{
+    //Push
+    class var pushKey: String {
+        return defaultsDomain() + ".PushKey"
+    }
+    
+    class func isRegisteredForPush() -> Bool?
+    {
+        return NSUserDefaults.standardUserDefaults().objectForKey(self.pushKey) as? Bool
+    }
+    
+    class func setPushRegistration(registered: Bool?)
+    {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(registered, forKey: self.pushKey)
+        defaults.synchronize()
     }
 }

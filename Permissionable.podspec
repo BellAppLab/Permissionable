@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Permissionable"
-  s.version          = "0.1.0"
+  s.version          = "0.2.0"
   s.summary          = "A simplified Swifty way of asking users for permissions on iOS, based on Cluster's Pre-Permissions."
 
   s.description      = <<-DESC
@@ -21,4 +21,5 @@ A simplified Swifty way of asking users for permissions on iOS, inpired by Clust
   s.frameworks = 'UIKit', 'AVFoundation', 'Photos'
   s.dependency 'Alertable'
   s.dependency 'Backgroundable'
+  s.dependency 'Defines'
 end

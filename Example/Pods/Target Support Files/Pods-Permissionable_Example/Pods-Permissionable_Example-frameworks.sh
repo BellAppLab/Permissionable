@@ -86,10 +86,12 @@ strip_invalid_archs() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-Permissionable_Example/Alertable.framework"
   install_framework "Pods-Permissionable_Example/Backgroundable.framework"
+  install_framework "Pods-Permissionable_Example/Defines.framework"
   install_framework "Pods-Permissionable_Example/Permissionable.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-Permissionable_Example/Alertable.framework"
   install_framework "Pods-Permissionable_Example/Backgroundable.framework"
+  install_framework "Pods-Permissionable_Example/Defines.framework"
   install_framework "Pods-Permissionable_Example/Permissionable.framework"
 fi
