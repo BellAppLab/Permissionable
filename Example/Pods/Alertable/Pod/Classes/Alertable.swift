@@ -37,11 +37,11 @@ public class Alert
         @params actions: You may provide Actions for the alert. Optional.
         @discussion If no actions are provided, a default 'Ok' action will be created. (No localization files are provided with this library, but the 'Ok' message is created with `NSLocalizedString`, so should the parent app have the key 'Ok' set up, Alertable will pick it up.)
     */
-    public init(_ message: String, _ title: String? = nil, _ sender: UIViewController? = nil, _ actions: [Action]? = nil)
+    public init(_ message: String, _ title: String? = nil, _ sender: UIViewController? = nil, _ actions: [Action]? = nil, _ style: UIAlertControllerStyle = .Alert)
     {
-        self.controller = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        if let finalActions = actions {
-            for action in finalActions {
+        self.controller = UIAlertController(title: title, message: message, preferredStyle: style)
+        if actions != nil && !actions!.isEmpty {
+            for action in actions! {
                 self.controller.addAction(UIAlertAction(title: action.title, style: action.style ?? .Default, handler: { (alertAction: UIAlertAction) -> Void in
                     Alert.on = false
                     action.handler?(alertAction)
