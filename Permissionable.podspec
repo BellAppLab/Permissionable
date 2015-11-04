@@ -15,19 +15,30 @@ A simplified Swifty way of asking users for permissions on iOS, inpired by Clust
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
-
-  s.source_files = 'Pod/Classes/**/*'
-
   s.frameworks = 'UIKit'
-  s.dependency 'Alertable'
-  s.dependency 'Backgroundable'
-  s.dependency 'Defines'
+
+  s.default_subspec = 'Core'
+
+  s.subspec 'Core' do |sp|
+    sp.dependency 'Alertable'
+    sp.dependency 'Backgroundable'
+    sp.dependency 'Defines'
+    sp.source_files = 'Pod/Classes/**/*'
+  end
 
   s.subspec 'Camera' do |sp|
+    sp.dependency 'Permissionable/Core'
     sp.frameworks = 'AVFoundation'
   end
 
   s.subspec 'Photos' do |sp|
+    sp.dependency 'Permissionable/Core'
     sp.frameworks = 'Photos'
+  end
+
+  s.subspec 'All' do |sp|
+    sp.dependency 'Permissionable/Core'
+    sp.dependency 'Permissionable/Camera'
+    sp.dependency 'Permissionable/Photos'
   end
 end

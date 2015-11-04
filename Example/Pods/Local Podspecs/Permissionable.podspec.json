@@ -17,27 +17,55 @@
     "ios": "8.0"
   },
   "requires_arc": true,
-  "source_files": "Pod/Classes/**/*",
   "frameworks": "UIKit",
-  "dependencies": {
-    "Alertable": [
-
-    ],
-    "Backgroundable": [
-
-    ],
-    "Defines": [
-
-    ]
-  },
+  "default_subspecs": "Core",
   "subspecs": [
     {
+      "name": "Core",
+      "dependencies": {
+        "Alertable": [
+
+        ],
+        "Backgroundable": [
+
+        ],
+        "Defines": [
+
+        ]
+      },
+      "source_files": "Pod/Classes/**/*"
+    },
+    {
       "name": "Camera",
+      "dependencies": {
+        "Permissionable/Core": [
+
+        ]
+      },
       "frameworks": "AVFoundation"
     },
     {
       "name": "Photos",
+      "dependencies": {
+        "Permissionable/Core": [
+
+        ]
+      },
       "frameworks": "Photos"
+    },
+    {
+      "name": "All",
+      "dependencies": {
+        "Permissionable/Core": [
+
+        ],
+        "Permissionable/Camera": [
+
+        ],
+        "Permissionable/Photos": [
+
+        ]
+      }
     }
   ]
 }
