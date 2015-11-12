@@ -1,6 +1,4 @@
 import UIKit
-import AVFoundation
-import Photos
 import Alertable
 import Backgroundable
 import Defines
@@ -106,21 +104,9 @@ public enum Permission
         switch self
         {
         case .Camera:
-            let status = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
-            switch status
-            {
-            case .Authorized: return true
-            case .Denied, .Restricted: return false
-            case .NotDetermined: return nil
-            }
+            return self.hasCameraPermission()
         case .Photos:
-            let status = PHPhotoLibrary.authorizationStatus()
-            switch status
-            {
-            case .Authorized: return true
-            case .Denied, .Restricted: return false
-            case .NotDetermined: return nil
-            }
+            return self.hasPhotosPermission()
         case .Push:
             return NSUserDefaults.isRegisteredForPush()
         }
@@ -137,31 +123,10 @@ public enum Permission
         switch self
         {
         case .Camera:
-            result.append((title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
-                Alert.on = true
-                AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: { (success: Bool) -> Void in
-                    Alert.on = false
-                    toMainThread {
-                        block?(success: success)
-                    }
-                })
-            }))
+            result.append(self.makeCameraAction(block))
             break
         case .Photos:
-            result.append((title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
-                Alert.on = true
-                PHPhotoLibrary.requestAuthorization { (status: PHAuthorizationStatus) -> Void in
-                    Alert.on = false
-                    toMainThread {
-                        if status == .Denied || status == .Restricted {
-                            if let privatePermission = PrivatePermission.privateFor(publicPermission: self) {
-                                Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
-                            }
-                        }
-                        block?(success: status == .Authorized)
-                    }
-                }
-            }))
+            result.append(self.makePhotosAction(sender, block))
             break
         case .Push:
             result.append((title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
@@ -209,7 +174,7 @@ public enum Permission
 
 
 //MARK: - Private
-private enum PrivatePermission
+internal enum PrivatePermission
 {
     static func privateFor(publicPermission permission: Permission) -> PrivatePermission?
     {

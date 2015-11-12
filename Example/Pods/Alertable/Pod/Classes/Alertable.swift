@@ -1,11 +1,43 @@
 import UIKit
 
 /*
+    Alertable
+    
+    Protocol that defines how to present an Alert.
+*/
+public protocol Alertable
+{
+    /*
+    Easily check if we're currently alerting the user.
+    */
+    var alerting: Bool { get }
+    
+    /*
+    Quickly present an alert to the user.
+    
+    @params alert: The alert to be presented.
+    @discussion This method assumes we're presenting the alert from the View Controller that stored within the Alert. See Alert's documentation for more details.
+    */
+    func alert(this alert: Alert)
+}
+
+public extension Alertable
+{
+    public var alerting: Bool {
+        return Alert.on
+    }
+    
+    public func alert(this alert: Alert) {
+        alert.show()
+    }
+}
+
+/*
     Alert
 
-    This is the main class that handles alerts on iOS.
+    This is the main struct that handles alerts on iOS.
 */
-public class Alert
+public struct Alert
 {
     //MARK: - Private
     private let controller: UIAlertController
@@ -88,7 +120,7 @@ public class Alert
         @params actions: You may provide Actions for the alert. Optional.
         @discussion If no actions are provided, a default 'Ok' action will be created.
     */
-    public class func show(message: String, _ title: String? = nil, _ sender: UIViewController? = nil, _ actions: [Action]? = nil)
+    public static func show(message: String, _ title: String? = nil, _ sender: UIViewController? = nil, _ actions: [Action]? = nil)
     {
         Alert(message, title, sender, actions).show()
     }

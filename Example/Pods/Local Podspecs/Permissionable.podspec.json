@@ -1,6 +1,6 @@
 {
   "name": "Permissionable",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "summary": "A simplified Swifty way of asking users for permissions on iOS, based on Cluster's Pre-Permissions.",
   "description": "A simplified Swifty way of asking users for permissions on iOS, inpired by Cluster's Pre-Permissions: https://github.com/clusterinc/ClusterPrePermissions",
   "homepage": "https://github.com/BellAppLab/Permissionable",
@@ -10,7 +10,7 @@
   },
   "source": {
     "git": "https://github.com/BellAppLab/Permissionable.git",
-    "tag": "0.2.1"
+    "tag": "0.2.3"
   },
   "social_media_url": "https://twitter.com/BellAppLab",
   "platforms": {
@@ -18,7 +18,7 @@
   },
   "requires_arc": true,
   "frameworks": "UIKit",
-  "default_subspecs": "Core",
+  "default_subspecs": "All",
   "subspecs": [
     {
       "name": "Core",
@@ -33,7 +33,7 @@
 
         ]
       },
-      "source_files": "Pod/Classes/**/*"
+      "source_files": "Pod/Classes/*.{swift}"
     },
     {
       "name": "Camera",
@@ -42,7 +42,8 @@
 
         ]
       },
-      "frameworks": "AVFoundation"
+      "frameworks": "AVFoundation",
+      "source_files": "Pod/Classes/Camera/*.{swift}"
     },
     {
       "name": "Photos",
@@ -51,7 +52,8 @@
 
         ]
       },
-      "frameworks": "Photos"
+      "frameworks": "Photos",
+      "source_files": "Pod/Classes/Photos/*.{swift}"
     },
     {
       "name": "All",
