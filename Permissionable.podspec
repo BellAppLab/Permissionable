@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Permissionable"
-  s.version          = "0.2.2"
+  s.version          = "0.2.3"
   s.summary          = "A simplified Swifty way of asking users for permissions on iOS, based on Cluster's Pre-Permissions."
 
   s.description      = <<-DESC

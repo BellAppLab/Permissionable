@@ -6,24 +6,23 @@ import Backgroundable
 import Defines
 
 
-//MARK: Consts
-public func domain() -> String
-{
-    return "com.bellapplab.Permissionable"
-}
-
-public func defaultsDomain() -> String
-{
-    return domain() + "." + Defines.App.Name
-}
-
-
 //MARK: - Main
 /*
     An simplified way of asking permissions to the user on iOS.
 */
 public enum Permission
 {
+    //MARK: Consts
+    public static func domain() -> String
+    {
+        return "com.bellapplab.Permissionable"
+    }
+    
+    internal static func defaultsDomain() -> String
+    {
+        return self.domain() + "." + Defines.App.Name
+    }
+    
     /*
         Resets any cached information on permissions requested to the user.
     
@@ -287,7 +286,7 @@ private extension NSUserDefaults
 {
     //Push
     class var pushKey: String {
-        return defaultsDomain() + ".PushKey"
+        return Permission.defaultsDomain() + ".PushKey"
     }
     
     class func isRegisteredForPush() -> Bool?
