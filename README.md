@@ -26,14 +26,23 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 To localize this library, make sure you include the following entries in your Localizable.strings file:
 
 `"Yes" = "<Your translation>";`
+
 `"No" = "<Your translation>";`
+
 `"Please" = "<Your translation>"; //Default alert title`
+
 `"Would you mind if we send you push notifications?" = "<Your translation>"; //Default message for push notifications`
+
 `"Would you mind if we access your camera?" = "<Your translation>"; //Default message for the device's camera`
+
 `"Would you mind if we access your photos?" = "<Your translation>"; //Default message for the user's photos`
+
 `"Uh oh" = "<Your translation>"; //Default alert title for when things go wrong`
+
 `"Looks like we can't access the camera... Would you like to go to the Settings app to check?" = "<Your translation>"; //Default message to prompt the user to fix a permission on the Settings app`
+
 `"Looks like we can't access your photos... Would you like to go to the Settings app to check?" = "<Your translation>"; //Default message to prompt the user to fix a permission on the Settings app`
+
 
 ## Requirements
 
