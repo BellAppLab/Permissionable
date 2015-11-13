@@ -5,7 +5,7 @@ import Backgroundable
 
 extension Permissions.Photos
 {
-    func hasAccess() -> NSNumber? {
+    @objc func hasAccess() -> NSNumber? {
         let status = PHPhotoLibrary.authorizationStatus()
         switch status
         {

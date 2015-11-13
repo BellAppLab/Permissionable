@@ -5,7 +5,7 @@ import Backgroundable
 
 extension Permissions.Camera
 {   
-    func hasAccess() -> NSNumber? {
+    @objc func hasAccess() -> NSNumber? {
         let status = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
         switch status
         {
