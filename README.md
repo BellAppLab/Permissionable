@@ -9,7 +9,6 @@
 
     import Permissionable
 
-    //Regular permissions
     class ViewController: UIViewController {
         func askPermission() {
             Permissions.Camera.request(self) { (success: Bool) -> Void in 
@@ -18,15 +17,24 @@
                 }
             }
         }
+        func askForPushPermission() {
+            Permissions.Push.request(self, categories) { (success: Bool) -> Void in 
+                if success {
+                    print("\o/")
+                }
+            }
+        }
     }
-
+    
+    //===================================================
+    
     import Permissionable
 
     @UIApplicationMain
     class AppDelegate: UIResponder, UIApplicationDelegate {
     
         {...}
-    
+        
         func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
             Permissions.didFinishRegisteringForPushNotifications(error)
         }
@@ -34,6 +42,16 @@
         func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
             //Do domething with the token
             Permissions.didFinishRegisteringForPushNotifications(nil)
+        }
+    }
+    
+    //===================================================
+    
+    import Permissionable
+
+    class UserHandler {
+        func logout() {
+            Permissions.reset()
         }
     }
 
