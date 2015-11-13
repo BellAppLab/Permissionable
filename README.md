@@ -7,53 +7,55 @@
 
 ## Usage
 
-    import Permissionable
+```swift
+import Permissionable
 
-    class ViewController: UIViewController {
-        func askPermission() {
-            Permissions.Camera.request(self) { (success: Bool) -> Void in 
-                if success {
-                    print("\o/")
-                }
-            }
-        }
-        func askForPushPermission() {
-            Permissions.Push.request(self, categories) { (success: Bool) -> Void in 
-                if success {
-                    print("\o/")
-                }
+class ViewController: UIViewController {
+    func askPermission() {
+        Permissions.Camera.request(self) { (success: Bool) -> Void in 
+            if success {
+                print("\o/")
             }
         }
     }
-    
-    //===================================================
-    
-    import Permissionable
-
-    @UIApplicationMain
-    class AppDelegate: UIResponder, UIApplicationDelegate {
-    
-        {...}
-        
-        func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-            Permissions.didFinishRegisteringForPushNotifications(error)
-        }
-    
-        func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-            //Do domething with the token
-            Permissions.didFinishRegisteringForPushNotifications(nil)
+    func askForPushPermission() {
+        Permissions.Push.request(self, categories) { (success: Bool) -> Void in 
+            if success {
+                print("\o/")
+            }
         }
     }
+}
     
-    //===================================================
+//===================================================
     
-    import Permissionable
+import Permissionable
 
-    class UserHandler {
-        func logout() {
-            Permissions.reset()
-        }
+@UIApplicationMain
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    {...}
+
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        Permissions.didFinishRegisteringForPushNotifications(error)
     }
+
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        //Do domething with the token
+        Permissions.didFinishRegisteringForPushNotifications(nil)
+    }
+}
+
+//===================================================
+
+import Permissionable
+
+class UserHandler {
+    func logout() {
+        Permissions.reset()
+    }
+}
+```
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
