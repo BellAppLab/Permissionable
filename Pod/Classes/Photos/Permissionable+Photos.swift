@@ -3,31 +3,24 @@ import Alertable
 import Backgroundable
 
 
-internal extension Permission
+extension Permissions.Photos
 {
-    internal func hasPhotosPermission() -> Bool?
-    {
+    func hasAccess() -> NSNumber? {
         let status = PHPhotoLibrary.authorizationStatus()
         switch status
         {
-        case .Authorized: return true
-        case .Denied, .Restricted: return false
+        case .Authorized: return NSNumber(bool: true)
+        case .Denied, .Restricted: return NSNumber(bool: false)
         case .NotDetermined: return nil
         }
     }
     
-    internal func makePhotosAction(sender: UIViewController, _ block: Result?) -> Alert.Action
-    {
-        return (title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
+    @objc func makeAction(sender: UIViewController, _ block: Permissions.Result?) -> AnyObject {
+        return Alert.Action(title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
             Alert.on = true
             PHPhotoLibrary.requestAuthorization { (status: PHAuthorizationStatus) -> Void in
                 Alert.on = false
                 toMainThread {
-                    if status == .Denied || status == .Restricted {
-                        if let privatePermission = PrivatePermission.privateFor(publicPermission: self) {
-                            Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
-                        }
-                    }
                     block?(success: status == .Authorized)
                 }
             }

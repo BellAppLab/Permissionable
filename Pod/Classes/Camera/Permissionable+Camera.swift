@@ -3,22 +3,20 @@ import Alertable
 import Backgroundable
 
 
-internal extension Permission
-{
-    internal func hasCameraPermission() -> Bool?
-    {
+extension Permissions.Camera
+{   
+    func hasAccess() -> NSNumber? {
         let status = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
         switch status
         {
-        case .Authorized: return true
-        case .Denied, .Restricted: return false
+        case .Authorized: return NSNumber(bool: true)
+        case .Denied, .Restricted: return NSNumber(bool: false)
         case .NotDetermined: return nil
         }
     }
     
-    internal func makeCameraAction(block: Result?) -> Alert.Action
-    {
-        return (title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
+    @objc func makeAction(sender: UIViewController, _ block: Permissions.Result?) -> AnyObject {
+        return Alert.Action(title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
             Alert.on = true
             AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: { (success: Bool) -> Void in
                 Alert.on = false

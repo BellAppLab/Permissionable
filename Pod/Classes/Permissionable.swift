@@ -8,7 +8,7 @@ import Defines
 /*
     An simplified way of asking permissions to the user on iOS.
 */
-public enum Permission
+public struct Permissions
 {
     //MARK: Consts
     public static func domain() -> String
@@ -41,21 +41,55 @@ public enum Permission
         
         For now we're supporting Camera and Photos permissions. More to come!
     */
-    case Camera, Photos, Push
-    
-    /**/
-    public func request(sender: UIViewController, _ block: Result? = nil)
+    public class Camera: Permissionable
     {
-        self.request(sender, nil, block)
+        public static func request(sender: UIViewController, _ block: Result?)
+        {
+            Permissions.request(Camera(), sender, nil, block)
+        }
+        
+        
+    }
+    public class Photos: Permissionable
+    {
+        public static func request(sender: UIViewController, _ block: Result?)
+        {
+            Permissions.request(Photos(), sender, nil, block)
+        }
     }
     
-    public func request(sender: UIViewController, _ categories: Set<UIUserNotificationCategory>?, _ block: Result? = nil)
+    public class Push: Permissionable
     {
-        if let access = self.hasAccess { //We either have access or we've been denied
-            if access { //No need to ask the user
-                if self == .Push {
+        public static func request(sender: UIViewController, _ categories: Set<UIUserNotificationCategory>?, _ block: Result? = nil)
+        {
+            Permissions.request(Push(), sender, categories, block)
+        }
+        
+        private func proceed(categories: Set<UIUserNotificationCategory>? = nil, _ block: Result?)
+        {
+            pushBlock = block
+            let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: categories)
+            let application = UIApplication.sharedApplication()
+            application.registerUserNotificationSettings(settings)
+            application.registerForRemoteNotifications()
+        }
+        
+        @objc func makeAction(sender: UIViewController, _ block: Permissions.Result?) -> AnyObject {
+            return Alert.Action(title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
+                Alert.on = true
+                block?(success: true)
+            })
+        }
+    }
+    
+    //MARK: Aux
+    private static func request(permission: Permissionable, _ sender: UIViewController, _ categories: Set<UIUserNotificationCategory>?, _ block: Result? = nil)
+    {
+        if let access = permission.hasAccess?() { //We either have access or we've been denied
+            if access.boolValue { //No need to ask the user
+                if let push = permission as? Push {
                     //But in the case of push notifications, we still want to get a token fresh from the oven
-                    self.proceedWithPush(categories, block)
+                    push.proceed(categories, block)
                     return
                 }
                 toMainThread {
@@ -64,92 +98,60 @@ public enum Permission
                 return
             }
             //We've been denied access
-            if let privatePermission = PrivatePermission.privateFor(publicPermission: self) {
+            if let privatePermission = PrivatePermission.privateFor(publicPermission: permission) {
                 Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
             }
             return
         }
         //We haven't asked for permissions yet
-        Alert.show(self.message, self.title, sender, self.actions(sender, categories, block))
+        Alert.show(permission.message, permission.title, sender, self.actions(permission, sender, categories, block))
     }
     
-    /*
-        These titles are presented when we're trying to get the user's permission.
-    
-        We do not provide any translations for these messages, so if your app would like to translate them (or if you would like to have a different wording), simply add keys to your Localizable.strings files that match the ones below.
-    */
-    var title: String {
-        switch self
-        {
-        case .Camera, .Photos, .Push: return NSLocalizedString("Please", comment: "Title for the alert that appears when we want to ask the user for permissions")
-        }
-    }
-    
-    /*
-        These messages are presented when we're trying to get the user's permission.
-    
-        We do not provide any translations for these messages, so if your app would like to translate them (or if you would like to have a different wording), simply add keys to your Localizable.strings files that match the ones below.
-    */
-    var message: String {
-        switch self
-        {
-        case .Camera: return NSLocalizedString("Would you mind if we access your camera?", comment: "Message that asks the user for the camera")
-        case .Photos: return NSLocalizedString("Would you mind if we access your photos?", comment: "Message that asks the user for their photos")
-        case .Push: return NSLocalizedString("Would you mind if we send you push notifications?", comment: "Message that asks the user if we can send them push notifications")
-        }
-    }
-    
-    //MARK: Aux
-    private var hasAccess: Bool? {
-        switch self
-        {
-        case .Camera:
-            return self.hasCameraPermission()
-        case .Photos:
-            return self.hasPhotosPermission()
-        case .Push:
-            return NSUserDefaults.isRegisteredForPush()
-        }
-    }
-    
-    private func actions(sender: UIViewController, _ categories: Set<UIUserNotificationCategory>? = nil, _ block: Result?) -> [Alert.Action]
+    private static func actions(permission: Permissionable, _ sender: UIViewController, _ categories: Set<UIUserNotificationCategory>? = nil, _ block: Result?) -> [Alert.Action]
     {
         var result: [Alert.Action] = []
-        result.append((title: NSLocalizedString("No", comment: ""), style: .Destructive, handler: block == nil ? nil : { (UIAlertAction) -> Void in
+        result.append(Alert.Action(title: NSLocalizedString("No", comment: ""), style: .Destructive, handler: block == nil ? nil : { (UIAlertAction) -> Void in
             toMainThread {
                 block!(success: false)
             }
         }))
-        switch self
+        
+        switch permission
         {
-        case .Camera:
-            result.append(self.makeCameraAction(block))
+        case is Camera:
+            if let action = permission.makeAction?(sender, block) as? Alert.Action {
+                result.append(action)
+            }
             break
-        case .Photos:
-            result.append(self.makePhotosAction(sender, block))
+        case is Photos:
+            let photosBlock = { (success: Bool) ->  Void in
+                if !success {
+                    if let privatePermission = PrivatePermission.privateFor(publicPermission: permission) {
+                        Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
+                        return
+                    }
+                }
+                block?(success: true)
+            }
+            if let action = permission.makeAction?(sender, photosBlock) as? Alert.Action {
+                result.append(action)
+            }
             break
-        case .Push:
-            result.append((title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
-                Alert.on = true
-                self.proceedWithPush(categories, block)
-            }))
+        case is Push:
+            let pushBlock = { (success: Bool) ->  Void in
+                (permission as! Push).proceed(categories, block)
+            }
+            if let action = permission.makeAction?(sender, pushBlock) as? Alert.Action {
+                result.append(action)
+            }
+            break
+        default: break
         }
+        
         return result
     }
     
     //MARK: Push
-    private func proceedWithPush(categories: Set<UIUserNotificationCategory>? = nil, _ block: Result?)
-    {
-        if self != .Push {
-            return
-        }
-        pushBlock = block
-        let settings = UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: categories)
-        let application = UIApplication.sharedApplication()
-        application.registerUserNotificationSettings(settings)
-        application.registerForRemoteNotifications()
-    }
-    
     public static func didFinishRegisteringForPushNotifications(error: NSError?)
     {
         func finish(result: Bool) {
@@ -173,15 +175,52 @@ public enum Permission
 }
 
 
-//MARK: - Private
+//MARK: - Internal
+@objc internal protocol Permissionable
+{
+    optional func hasAccess() -> NSNumber?
+    optional func makeAction(sender: UIViewController, _ block: Permissions.Result?) -> AnyObject
+}
+
+private extension Permissionable
+{
+    /*
+    These titles are presented when we're trying to get the user's permission.
+    
+    We do not provide any translations for these messages, so if your app would like to translate them (or if you would like to have a different wording), simply add keys to your Localizable.strings files that match the ones below.
+    */
+    var title: String {
+        switch self
+        {
+        case is Permissions.Camera, is Permissions.Photos, is Permissions.Push: return NSLocalizedString("Please", comment: "Title for the alert that appears when we want to ask the user for permissions")
+        default: return ""
+        }
+    }
+    
+    /*
+    These messages are presented when we're trying to get the user's permission.
+    
+    We do not provide any translations for these messages, so if your app would like to translate them (or if you would like to have a different wording), simply add keys to your Localizable.strings files that match the ones below.
+    */
+    var message: String {
+        switch self
+        {
+        case is Permissions.Camera: return NSLocalizedString("Would you mind if we access your camera?", comment: "Message that asks the user for the camera")
+        case is Permissions.Photos: return NSLocalizedString("Would you mind if we access your photos?", comment: "Message that asks the user for their photos")
+        case is Permissions.Push: return NSLocalizedString("Would you mind if we send you push notifications?", comment: "Message that asks the user if we can send them push notifications")
+        default: return ""
+        }
+    }
+}
+
 internal enum PrivatePermission
 {
-    static func privateFor(publicPermission permission: Permission) -> PrivatePermission?
+    static func privateFor(publicPermission permission: Permissionable) -> PrivatePermission?
     {
         switch permission
         {
-        case .Camera: return .NoCamera
-        case .Photos: return .NoPhotos
+        case is Permissions.Camera: return .NoCamera
+        case is Permissions.Photos: return .NoPhotos
         default: return nil
         }
     }
@@ -215,15 +254,15 @@ internal enum PrivatePermission
         }
     }
     
-    func actions(block: Permission.Result?) -> [Alert.Action]
+    func actions(block: Permissions.Result?) -> [Alert.Action]
     {
         var result: [Alert.Action] = []
-        result.append((title: NSLocalizedString("No", comment: ""), style: .Destructive, handler: block == nil ? nil : { (UIAlertAction) -> Void in
+        result.append(Alert.Action(title: NSLocalizedString("No", comment: ""), style: .Destructive, handler: block == nil ? nil : { (UIAlertAction) -> Void in
             toMainThread {
                 block!(success: false)
             }
         }))
-        result.append((title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
+        result.append(Alert.Action(title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
             toMainThread {
                 UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
             }
@@ -235,11 +274,12 @@ internal enum PrivatePermission
     }
 }
 
-private var pushBlock: Permission.Result? = nil
+private var pushBlock: Permissions.Result? = nil
 
 private func returnFromPush(result: Bool)
 {
     if let block = pushBlock {
+        Alert.on = false
         toMainThread {
             block(success: result)
         }
@@ -251,7 +291,7 @@ private extension NSUserDefaults
 {
     //Push
     class var pushKey: String {
-        return Permission.defaultsDomain() + ".PushKey"
+        return Permissions.defaultsDomain() + ".PushKey"
     }
     
     class func isRegisteredForPush() -> Bool?

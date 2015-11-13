@@ -51,7 +51,19 @@ public struct Alert
         @params style: The Action's style. If no style is provided, `.Default` is assumed.
         @params handler: The Action's handler block. Optional.
     */
-    public typealias Action = (title: String?, style: UIAlertActionStyle?, handler: ((UIAlertAction) -> Void)?)
+    public class Action
+    {
+        public let title: String?
+        public let style: UIAlertActionStyle?
+        public let handler: ((UIAlertAction) -> Void)?
+        
+        public init(title: String?, style: UIAlertActionStyle?, handler: ((UIAlertAction) -> Void)?)
+        {
+            self.title = title
+            self.style = style
+            self.handler = handler
+        }
+    }
     
     /*
         Check this variable if you want to know whether the app is currently alerting the user or not.

@@ -39,7 +39,6 @@
 		D05C9DC8AD2203D75CF24C9D0377929B /* Pods-Permissionable_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FEF261CF961E12E54298E701B66160F0 /* Pods-Permissionable_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D97D0B2C1336ECFB1B32F58C1195096D /* Pods-Permissionable_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B602C84469C50749F1D0BF96DE30D96 /* Pods-Permissionable_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E61044AFA02A7A1245DEC62F1405D90F /* Permissionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C3AC68AF7974D5C48F351F67BA9418 /* Permissionable.swift */; };
-		E6A6F72BEC3D32B6D0F31E6D74CA46A8 /* UIViewController+Permissionable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FFD2FBF97182A20CFF28BCB73DDDA1 /* UIViewController+Permissionable.swift */; };
 		EF130BB97DA2BF6989A92BC259A72EA7 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B8BB8D6FA5AF3FE2D651444C67D5292 /* AVFoundation.framework */; };
 		FE15765865583E3BD7D7ADE4C129DDE8 /* Permissionable-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F67661B85367B454F17E74B50AD0B22E /* Permissionable-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -177,7 +176,6 @@
 		C11B9A97479E573334F7DAAD5A05F212 /* Pods-Permissionable_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Permissionable_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		C3F1FA2B4F0706189B34F0A4B830C681 /* Pods-Permissionable_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Permissionable_Tests-resources.sh"; sourceTree = "<group>"; };
 		C577713B58096F1342F95D7123EC3E83 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D1FFD2FBF97182A20CFF28BCB73DDDA1 /* UIViewController+Permissionable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIViewController+Permissionable.swift"; sourceTree = "<group>"; };
 		DBCADD27ECA56EE4D9C2687B4C3D40EE /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		DCF8100D0C36AFE43AB40C23A7416AF5 /* Pods_Permissionable_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Permissionable_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDDB4F672101A94D16400FF07166D25 /* ViewControllers+Backgroundable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "ViewControllers+Backgroundable.swift"; path = "Pod/Classes/ViewControllers+Backgroundable.swift"; sourceTree = "<group>"; };
@@ -351,7 +349,6 @@
 			isa = PBXGroup;
 			children = (
 				E5C3AC68AF7974D5C48F351F67BA9418 /* Permissionable.swift */,
-				D1FFD2FBF97182A20CFF28BCB73DDDA1 /* UIViewController+Permissionable.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -756,7 +753,6 @@
 				426BE91BA1C220E2779BC907151EA7B3 /* Permissionable+Photos.swift in Sources */,
 				1D2FB8F984E3CD648671DFE0BDE6229B /* Permissionable-dummy.m in Sources */,
 				E61044AFA02A7A1245DEC62F1405D90F /* Permissionable.swift in Sources */,
-				E6A6F72BEC3D32B6D0F31E6D74CA46A8 /* UIViewController+Permissionable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
