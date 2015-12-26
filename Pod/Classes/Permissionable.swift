@@ -1,7 +1,7 @@
 import UIKit
+import Defines
 import Alertable
 import Backgroundable
-import Defines
 
 
 //MARK: - Main
@@ -43,6 +43,13 @@ public struct Permissions
     */
     public class Camera: Permissionable
     {
+        public static var isThere: Bool {
+            if let result = Camera().hasAccess() {
+                return result.boolValue
+            }
+            return false
+        }
+        
         public static func request(sender: UIViewController, _ block: Result?)
         {
             Permissions.request(Camera(), sender, nil, block)
@@ -52,6 +59,13 @@ public struct Permissions
     }
     public class Photos: Permissionable
     {
+        public static var isThere: Bool {
+            if let result = Photos().hasAccess() {
+                return result.boolValue
+            }
+            return false
+        }
+        
         public static func request(sender: UIViewController, _ block: Result?)
         {
             Permissions.request(Photos(), sender, nil, block)
@@ -60,6 +74,17 @@ public struct Permissions
     
     public class Push: Permissionable
     {
+        public static var isThere: Bool {
+            if let result = Push().hasAccess() {
+                return result.boolValue
+            }
+            return false
+        }
+        
+        @objc func hasAccess() -> NSNumber? {
+            return NSUserDefaults.isRegisteredForPush()
+        }
+        
         public static func request(sender: UIViewController, _ categories: Set<UIUserNotificationCategory>?, _ block: Result? = nil)
         {
             Permissions.request(Push(), sender, categories, block)
@@ -155,7 +180,7 @@ public struct Permissions
     public static func didFinishRegisteringForPushNotifications(error: NSError?)
     {
         func finish(result: Bool) {
-            NSUserDefaults.setPushRegistration(result)
+            NSUserDefaults.setPushRegistration(NSNumber(bool: result))
             returnFromPush(result)
         }
         
@@ -294,12 +319,12 @@ private extension NSUserDefaults
         return Permissions.defaultsDomain() + ".PushKey"
     }
     
-    class func isRegisteredForPush() -> Bool?
+    class func isRegisteredForPush() -> NSNumber?
     {
-        return NSUserDefaults.standardUserDefaults().objectForKey(self.pushKey) as? Bool
+        return NSUserDefaults.standardUserDefaults().objectForKey(self.pushKey) as? NSNumber
     }
     
-    class func setPushRegistration(registered: Bool?)
+    class func setPushRegistration(registered: NSNumber?)
     {
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(registered, forKey: self.pushKey)
