@@ -1,7 +1,7 @@
 import UIKit
-import Defines
-import Alertable
-import Backgroundable
+//import Defines
+//import Alertable
+//import Backgroundable
 
 
 //MARK: - Main
@@ -50,12 +50,19 @@ public struct Permissions
             return false
         }
         
+        public static var hasAsked: Bool {
+            return Camera().hasAccess() != nil
+        }
+        
         public static func request(sender: UIViewController, _ block: Result?)
         {
             Permissions.request(Camera(), sender, nil, block)
         }
         
-        
+        public static func showError(sender: UIViewController, _ block: Permissions.Result?)
+        {
+            Permissions.showError(Camera(), sender: sender, block)
+        }
     }
     public class Photos: Permissionable
     {
@@ -66,9 +73,18 @@ public struct Permissions
             return false
         }
         
+        public static var hasAsked: Bool {
+            return Photos().hasAccess() != nil
+        }
+        
         public static func request(sender: UIViewController, _ block: Result?)
         {
             Permissions.request(Photos(), sender, nil, block)
+        }
+        
+        public static func showError(sender: UIViewController, _ block: Permissions.Result?)
+        {
+            Permissions.showError(Photos(), sender: sender, block)
         }
     }
     
@@ -79,6 +95,10 @@ public struct Permissions
                 return result.boolValue
             }
             return false
+        }
+        
+        public static var hasAsked: Bool {
+            return Push().hasAccess() != nil
         }
         
         @objc func hasAccess() -> NSNumber? {
@@ -123,9 +143,7 @@ public struct Permissions
                 return
             }
             //We've been denied access
-            if let privatePermission = PrivatePermission.privateFor(publicPermission: permission) {
-                Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
-            }
+            self.showError(permission, sender: sender, block)
             return
         }
         //We haven't asked for permissions yet
@@ -174,6 +192,13 @@ public struct Permissions
         }
         
         return result
+    }
+    
+    private static func showError(permission: Permissionable, sender: UIViewController, _ block: Permissions.Result?)
+    {
+        if let privatePermission = PrivatePermission.privateFor(publicPermission: permission) {
+            Alert.show(privatePermission.message, privatePermission.title, sender, privatePermission.actions(block))
+        }
     }
     
     //MARK: Push
@@ -292,7 +317,7 @@ internal enum PrivatePermission
                 UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
             }
             toMainThread {
-                block!(success: false)
+                block?(success: false)
             }
         }))
         return result
