@@ -1,6 +1,6 @@
 import AVFoundation
-//import Alertable
-//import Backgroundable
+import Alertable
+import Backgroundable
 
 
 extension Permissions.Camera

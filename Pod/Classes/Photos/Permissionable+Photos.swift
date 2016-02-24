@@ -1,6 +1,6 @@
 import Photos
-//import Alertable
-//import Backgroundable
+import Alertable
+import Backgroundable
 
 
 extension Permissions.Photos

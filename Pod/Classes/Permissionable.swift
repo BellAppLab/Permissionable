@@ -1,7 +1,7 @@
 import UIKit
-//import Defines
-//import Alertable
-//import Backgroundable
+import Defines
+import Alertable
+import Backgroundable
 
 
 //MARK: - Main
