@@ -1,6 +1,5 @@
 import Photos
 import Alertable
-import Backgroundable
 
 
 extension Permissions.Photos
@@ -20,7 +19,7 @@ extension Permissions.Photos
             Alert.on = true
             PHPhotoLibrary.requestAuthorization { (status: PHAuthorizationStatus) -> Void in
                 Alert.on = false
-                toMainThread {
+                dispatch_async(dispatch_get_main_queue()) { () -> Void in
                     block?(success: status == .Authorized)
                 }
             }

@@ -1,7 +1,6 @@
 import UIKit
 import Defines
 import Alertable
-import Backgroundable
 
 
 //MARK: - Main
@@ -137,7 +136,7 @@ public struct Permissions
                     push.proceed(categories, block)
                     return
                 }
-                toMainThread {
+                dispatch_async(dispatch_get_main_queue()) { () -> Void in
                     block?(success: true)
                 }
                 return
@@ -154,7 +153,7 @@ public struct Permissions
     {
         var result: [Alert.Action] = []
         result.append(Alert.Action(title: NSLocalizedString("No", comment: ""), style: .Destructive, handler: block == nil ? nil : { (UIAlertAction) -> Void in
-            toMainThread {
+            dispatch_async(dispatch_get_main_queue()) { () -> Void in
                 block!(success: false)
             }
         }))
@@ -308,15 +307,15 @@ internal enum PrivatePermission
     {
         var result: [Alert.Action] = []
         result.append(Alert.Action(title: NSLocalizedString("No", comment: ""), style: .Destructive, handler: block == nil ? nil : { (UIAlertAction) -> Void in
-            toMainThread {
+            dispatch_async(dispatch_get_main_queue()) { () -> Void in
                 block!(success: false)
             }
         }))
         result.append(Alert.Action(title: NSLocalizedString("Yes", comment: ""), style: .Default, handler: { (UIAlertAction) -> Void in
-            toMainThread {
+            dispatch_async(dispatch_get_main_queue()) { () -> Void in
                 UIApplication.sharedApplication().openURL(NSURL(string:UIApplicationOpenSettingsURLString)!)
             }
-            toMainThread {
+            dispatch_async(dispatch_get_main_queue()) { () -> Void in
                 block?(success: false)
             }
         }))
@@ -330,7 +329,7 @@ private func returnFromPush(result: Bool)
 {
     if let block = pushBlock {
         Alert.on = false
-        toMainThread {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
             block(success: result)
         }
     }

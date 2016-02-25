@@ -1,6 +1,6 @@
 {
   "name": "Permissionable",
-  "version": "0.3.1",
+  "version": "0.4",
   "summary": "A simplified Swifty way of asking users for permissions on iOS, based on Cluster's Pre-Permissions.",
   "description": "A simplified Swifty way of asking users for permissions on iOS, inpired by Cluster's Pre-Permissions: https://github.com/clusterinc/ClusterPrePermissions",
   "homepage": "https://github.com/BellAppLab/Permissionable",
@@ -10,7 +10,7 @@
   },
   "source": {
     "git": "https://github.com/BellAppLab/Permissionable.git",
-    "tag": "0.3.1"
+    "tag": "0.4"
   },
   "social_media_url": "https://twitter.com/BellAppLab",
   "platforms": {
@@ -24,9 +24,6 @@
       "name": "Core",
       "dependencies": {
         "Alertable": [
-
-        ],
-        "Backgroundable": [
 
         ],
         "Defines": [

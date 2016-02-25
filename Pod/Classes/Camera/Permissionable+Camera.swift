@@ -1,6 +1,5 @@
 import AVFoundation
 import Alertable
-import Backgroundable
 
 
 extension Permissions.Camera
@@ -20,7 +19,7 @@ extension Permissions.Camera
             Alert.on = true
             AVCaptureDevice.requestAccessForMediaType(AVMediaTypeVideo, completionHandler: { (success: Bool) -> Void in
                 Alert.on = false
-                toMainThread {
+                dispatch_async(dispatch_get_main_queue()) { () -> Void in
                     block?(success: success)
                 }
             })

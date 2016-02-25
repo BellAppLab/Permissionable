@@ -1,20 +1,18 @@
 PODS:
   - Alertable (0.2.1)
-  - Backgroundable (0.3.6)
   - Defines (0.3.0)
-  - Permissionable (0.3.1):
-    - Permissionable/All (= 0.3.1)
-  - Permissionable/All (0.3.1):
+  - Permissionable (0.4):
+    - Permissionable/All (= 0.4)
+  - Permissionable/All (0.4):
     - Permissionable/Camera
     - Permissionable/Core
     - Permissionable/Photos
-  - Permissionable/Camera (0.3.1):
+  - Permissionable/Camera (0.4):
     - Permissionable/Core
-  - Permissionable/Core (0.3.1):
+  - Permissionable/Core (0.4):
     - Alertable
-    - Backgroundable
     - Defines
-  - Permissionable/Photos (0.3.1):
+  - Permissionable/Photos (0.4):
     - Permissionable/Core
 
 DEPENDENCIES:
@@ -22,12 +20,11 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   Permissionable:
-    :path: "../"
+    :path: ../
 
 SPEC CHECKSUMS:
   Alertable: 8cdfe3415b745bdb343f9509f6e6e9e1ca6c5b28
-  Backgroundable: 026d6de4a66fd70c78cf4bf24bcb80e554c35a86
   Defines: 43b157f1abcba4e5f1e9b522cf49be5e44d90be0
-  Permissionable: 070dd29b9a2d9caf257d03f878f13e86804dc6b1
+  Permissionable: eb4a0d40326d2873447b6daef13838640fc56117
 
 COCOAPODS: 0.39.0
