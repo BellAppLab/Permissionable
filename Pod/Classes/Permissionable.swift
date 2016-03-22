@@ -42,17 +42,6 @@ public struct Permissions
     */
     public class Camera: Permissionable
     {
-        public static var isThere: Bool {
-            if let result = Camera().hasAccess() {
-                return result.boolValue
-            }
-            return false
-        }
-        
-        public static var hasAsked: Bool {
-            return Camera().hasAccess() != nil
-        }
-        
         public static func request(sender: UIViewController, _ block: Result?)
         {
             Permissions.request(Camera(), sender, nil, block)
@@ -65,17 +54,6 @@ public struct Permissions
     }
     public class Photos: Permissionable
     {
-        public static var isThere: Bool {
-            if let result = Photos().hasAccess() {
-                return result.boolValue
-            }
-            return false
-        }
-        
-        public static var hasAsked: Bool {
-            return Photos().hasAccess() != nil
-        }
-        
         public static func request(sender: UIViewController, _ block: Result?)
         {
             Permissions.request(Photos(), sender, nil, block)

@@ -4,6 +4,17 @@ import Alertable
 
 extension Permissions.Photos
 {
+    public static var isThere: Bool {
+        if let result = Permissions.Photos().hasAccess() {
+            return result.boolValue
+        }
+        return false
+    }
+    
+    public static var hasAsked: Bool {
+        return Permissions.Photos().hasAccess() != nil
+    }
+    
     @objc func hasAccess() -> NSNumber? {
         let status = PHPhotoLibrary.authorizationStatus()
         switch status

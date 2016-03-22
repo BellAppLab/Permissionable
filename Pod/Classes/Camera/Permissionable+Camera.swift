@@ -3,7 +3,18 @@ import Alertable
 
 
 extension Permissions.Camera
-{   
+{
+    public static var isThere: Bool {
+        if let result = Permissions.Camera().hasAccess() {
+            return result.boolValue
+        }
+        return false
+    }
+    
+    public static var hasAsked: Bool {
+        return Permissions.Camera().hasAccess() != nil
+    }
+    
     @objc func hasAccess() -> NSNumber? {
         let status = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
         switch status
