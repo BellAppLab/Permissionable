@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Permissionable"
-  s.version          = "0.4.2"
+  s.version          = "0.5.0"
   s.summary          = "A simplified Swifty way of asking users for permissions on iOS, based on Cluster's Pre-Permissions."
 
   s.description      = <<-DESC
@@ -37,9 +37,16 @@ A simplified Swifty way of asking users for permissions on iOS, inpired by Clust
     sp.source_files = 'Pod/Classes/Photos/*.{swift}'
   end
 
+  s.subspec 'Location' do |sp|
+    sp.dependency 'Permissionable/Core'
+    sp.frameworks = 'CoreLocation'
+    sp.source_files = 'Pod/Classes/Location/*.{swift}'
+  end
+
   s.subspec 'All' do |sp|
     sp.dependency 'Permissionable/Core'
     sp.dependency 'Permissionable/Camera'
     sp.dependency 'Permissionable/Photos'
+    sp.dependency 'Permissionable/Location'
   end
 end

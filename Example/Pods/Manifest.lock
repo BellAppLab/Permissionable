@@ -1,18 +1,21 @@
 PODS:
   - Alertable (0.2.1)
   - Defines (0.3.1)
-  - Permissionable (0.4.1):
-    - Permissionable/All (= 0.4.1)
-  - Permissionable/All (0.4.1):
+  - Permissionable (0.5.0):
+    - Permissionable/All (= 0.5.0)
+  - Permissionable/All (0.5.0):
     - Permissionable/Camera
     - Permissionable/Core
+    - Permissionable/Location
     - Permissionable/Photos
-  - Permissionable/Camera (0.4.1):
+  - Permissionable/Camera (0.5.0):
     - Permissionable/Core
-  - Permissionable/Core (0.4.1):
+  - Permissionable/Core (0.5.0):
     - Alertable
     - Defines
-  - Permissionable/Photos (0.4.1):
+  - Permissionable/Location (0.5.0):
+    - Permissionable/Core
+  - Permissionable/Photos (0.5.0):
     - Permissionable/Core
 
 DEPENDENCIES:
@@ -25,6 +28,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alertable: 8cdfe3415b745bdb343f9509f6e6e9e1ca6c5b28
   Defines: 393edd879b8274df972d3d1b0c6a09980cc9585f
-  Permissionable: 15e7458943b84e6c2208034d6039562077a526d8
+  Permissionable: d5e4d0e3b19e5d84b0420b3cf064387013fe6ff7
 
 COCOAPODS: 0.39.0

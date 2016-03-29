@@ -1,6 +1,6 @@
 {
   "name": "Permissionable",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "summary": "A simplified Swifty way of asking users for permissions on iOS, based on Cluster's Pre-Permissions.",
   "description": "A simplified Swifty way of asking users for permissions on iOS, inpired by Cluster's Pre-Permissions: https://github.com/clusterinc/ClusterPrePermissions",
   "homepage": "https://github.com/BellAppLab/Permissionable",
@@ -10,7 +10,7 @@
   },
   "source": {
     "git": "https://github.com/BellAppLab/Permissionable.git",
-    "tag": "0.4.1"
+    "tag": "0.5.0"
   },
   "social_media_url": "https://twitter.com/BellAppLab",
   "platforms": {
@@ -53,6 +53,16 @@
       "source_files": "Pod/Classes/Photos/*.{swift}"
     },
     {
+      "name": "Location",
+      "dependencies": {
+        "Permissionable/Core": [
+
+        ]
+      },
+      "frameworks": "CoreLocation",
+      "source_files": "Pod/Classes/Location/*.{swift}"
+    },
+    {
       "name": "All",
       "dependencies": {
         "Permissionable/Core": [
@@ -62,6 +72,9 @@
 
         ],
         "Permissionable/Photos": [
+
+        ],
+        "Permissionable/Location": [
 
         ]
       }
