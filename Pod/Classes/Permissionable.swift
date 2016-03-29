@@ -79,7 +79,7 @@ public struct Permissions
         private init(_ kind: Kind) {
             self.kind = kind
         }
-        private convenience init() {
+        internal convenience init() {
             self.init(.WhenInUse)
         }
         

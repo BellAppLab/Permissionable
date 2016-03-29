@@ -5,14 +5,14 @@ import Alertable
 extension Permissions.Location
 {
     public static var isThere: Bool {
-        if let result = Permissions.Photos().hasAccess() {
+        if let result = Permissions.Location().hasAccess() {
             return result.boolValue
         }
         return false
     }
     
     public static var hasAsked: Bool {
-        return Permissions.Photos().hasAccess() != nil
+        return Permissions.Location().hasAccess() != nil
     }
     
     @objc func hasAccess() -> NSNumber? {
