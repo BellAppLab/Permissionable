@@ -88,6 +88,8 @@ iOS 8+
 
 ## Installation
 
+### CocoaPods
+
 Permissionable is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
@@ -104,6 +106,27 @@ pod "Permissionable/Camera"
 ```ruby
 pod "Permissionable/Photos"
 ```
+
+```ruby
+pod "Permissionable/Location"
+```
+
+### Git Submodules
+
+**Why submodules, you ask?**
+
+Following [this thread](http://stackoverflow.com/questions/31080284/adding-several-pods-increases-ios-app-launch-time-by-10-seconds#31573908) and other similar to it, and given that Cocoapods only works with Swift by adding the use_frameworks! directive, there's a strong case for not bloating the app up with too many frameworks. Although git submodules are a bit trickier to work with, the burden of adding dependencies should weigh on the developer, not on the user. :wink:
+
+To install Alertable using git submodules:
+
+```
+cd toYourProjectsFolder
+git submodule add -b Submodule --name Permissionable https://github.com/BellAppLab/Permissionable.git && git submodule add -b Submodule --name Defines https://github.com/BellAppLab/Defines.git && git submodule add -b Submodule --name Alertable https://github.com/BellAppLab/Alertable.git
+```
+
+Navigate to the new Permissionable, Alertable and Defines folders and drag each of the Pods folders to your Xcode project.
+
+*Note: Git submodules with nested submodules can get very messy quite quickly. So it sounds prudent to have dependencies be handled as regular submodules.*
 
 ## Author
 
