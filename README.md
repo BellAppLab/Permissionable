@@ -1,9 +1,8 @@
 # Permissionable
 
-[![CI Status](http://img.shields.io/travis/Bell App Lab/Permissionable.svg?style=flat)](https://travis-ci.org/Bell App Lab/Permissionable)
-[![Version](https://img.shields.io/cocoapods/v/Permissionable.svg?style=flat)](http://cocoapods.org/pods/Permissionable)
-[![License](https://img.shields.io/cocoapods/l/Permissionable.svg?style=flat)](http://cocoapods.org/pods/Permissionable)
-[![Platform](https://img.shields.io/cocoapods/p/Permissionable.svg?style=flat)](http://cocoapods.org/pods/Permissionable)
+A simplified Swifty way of asking users for permissions on iOS, inpired by Cluster's Pre-Permissions: https://github.com/clusterinc/ClusterPrePermissions
+
+_v0.6.0_
 
 ## Usage
 
@@ -57,8 +56,6 @@ class UserHandler {
 }
 ```
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
 ## Localization
 
 To localize this library, make sure you include the following entries in your Localizable.strings file:
@@ -84,32 +81,14 @@ To localize this library, make sure you include the following entries in your Lo
 
 ## Requirements
 
-iOS 8+
+* iOS 8+
+* Swift 3.0
 
 ## Installation
 
-### CocoaPods
+### Cocoapods
 
-Permissionable is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod "Permissionable"
-```
-
-**Please note** that this will install all possible permissions (and their related libraries as well), bloating up your app's dependencies. Take a look at the commands below to find one that suits your needs:
-
-```ruby
-pod "Permissionable/Camera"
-```
-
-```ruby
-pod "Permissionable/Photos"
-```
-
-```ruby
-pod "Permissionable/Location"
-```
+Because of [this](http://stackoverflow.com/questions/39637123/cocoapods-app-xcworkspace-does-not-exists), I've dropped support for Cocoapods on this repo. I cannot have production code rely on a dependency manager that breaks this badly. 
 
 ### Git Submodules
 
@@ -121,12 +100,18 @@ To install Permissionable using git submodules:
 
 ```
 cd toYourProjectsFolder
-git submodule add -b Submodule --name Permissionable https://github.com/BellAppLab/Permissionable.git && git submodule add -b Submodule --name Defines https://github.com/BellAppLab/Defines.git && git submodule add -b Submodule --name Alertable https://github.com/BellAppLab/Alertable.git
+git submodule add -b submodule --name Permissionable https://github.com/BellAppLab/Permissionable.git && git submodule add -b submodule --name Defines https://github.com/BellAppLab/Defines.git && git submodule add -b submodule --name Alertable https://github.com/BellAppLab/Alertable.git
 ```
 
-Navigate to the new Permissionable, Alertable and Defines folders and drag each of the Pods folders to your Xcode project.
+Navigate to the new Permissionable, Alertable and Defines folders and drag each of the `Source` folders to your Xcode project.
 
 *Note: Git submodules with nested submodules can get very messy quite quickly. So it sounds prudent to have dependencies be handled as regular submodules.*
+
+### Sub-permissions
+
+* **Camera:** If your project requires getting permission to use the camera, make sure to link it to `AVFoundation`. If you don't require it, remove the `Camera` folder.
+* **Location:** If your project requires getting permission to use location services, make sure to link it to `CoreLocation`. If you don't require it, remove the `Location` folder.
+* **Photos:** If your project requires getting permission to access the user's photos, make sure to link it to `Photos`. If you don't require them, remove the `Photos` folder.
 
 ## Author
 
