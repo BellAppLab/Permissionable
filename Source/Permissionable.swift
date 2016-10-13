@@ -1,6 +1,4 @@
 import UIKit
-import Defines
-import Alertable
 
 
 //MARK: - Main

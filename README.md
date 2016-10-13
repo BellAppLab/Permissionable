@@ -100,12 +100,10 @@ To install Permissionable using git submodules:
 
 ```
 cd toYourProjectsFolder
-git submodule add -b submodule --name Permissionable https://github.com/BellAppLab/Permissionable.git && git submodule add -b submodule --name Defines https://github.com/BellAppLab/Defines.git && git submodule add -b submodule --name Alertable https://github.com/BellAppLab/Alertable.git
+git submodule add -b submodule --name Permissionable https://github.com/BellAppLab/Permissionable.git && git submodule update --recursive Permissionable
 ```
 
 Navigate to the new Permissionable, Alertable and Defines folders and drag each of the `Source` folders to your Xcode project.
-
-*Note: Git submodules with nested submodules can get very messy quite quickly. So it sounds prudent to have dependencies be handled as regular submodules.*
 
 ### Sub-permissions
 
